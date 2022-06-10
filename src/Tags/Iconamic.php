@@ -7,8 +7,9 @@ use MityDigital\Iconamic\Facades\Iconamic as IconamicFacade;
 use Statamic\Facades\Blink;
 use Statamic\Tags\Tags;
 
-class Iconamic extends Tags
-{
+class Iconamic extends Tags {
+    use \Statamic\Tags\Concerns\RendersAttributes;
+
     /**
      * The {{ iconamic }} tag.
      *
@@ -155,6 +156,14 @@ class Iconamic extends Tags
 
             // set index
             Blink::put('iconamic-index', $index);
+
+            $attributes = $this->renderAttributesFromParams();
+
+            return str_replace(
+                '<svg',
+                collect(['<svg', $attributes])->filter()->implode(' '),
+                $svg
+            );
 
             return $svg;
         } else {
